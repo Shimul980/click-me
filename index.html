@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Click Me... If You Can!</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      plugins: [tailwind.plugin(function ({ addComponents }) {
+        addComponents({
+          '.btn-primary': {
+            '@apply bg-pink-500 text-white font-bold py-2 px-4 rounded-full shadow-lg hover:bg-pink-600': {},
+          },
+        })
+      })],
+    };
+  </script>
+  <link href="https://cdn.jsdelivr.net/npm/daisyui@3.7.4/dist/full.css" rel="stylesheet" type="text/css" />
+  <style>
+    body, html {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      overflow: hidden;
+    }
+    #trickyBtn {
+      transition: all 0.2s ease;
+    }
+  </style>
+</head>
+<body class="bg-gradient-to-br from-purple-100 to-blue-200 flex justify-center items-center relative">
+
+  <button id="trickyBtn" class="btn btn-primary absolute">
+    Click Me!
+  </button>
+
+  <script>
+    const btn = document.getElementById("trickyBtn");
+
+    btn.addEventListener("mouseover", () => {
+      const bodyRect = document.body.getBoundingClientRect();
+      const btnWidth = btn.offsetWidth;
+      const btnHeight = btn.offsetHeight;
+
+      const maxX = bodyRect.width - btnWidth;
+      const maxY = bodyRect.height - btnHeight;
+
+      const randX = Math.random() * maxX;
+      const randY = Math.random() * maxY;
+
+      btn.style.left = `${randX}px`;
+      btn.style.top = `${randY}px`;
+    });
+
+    btn.addEventListener("click", () => {
+      alert("You actually clicked it! 🔥🔥🔥");
+    });
+  </script>
+
+</body>
+</html>
