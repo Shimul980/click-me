@@ -2,43 +2,65 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Click Me... If You Can!</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Catch the RGB Button!</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    tailwind.config = {
-      plugins: [tailwind.plugin(function ({ addComponents }) {
-        addComponents({
-          '.btn-primary': {
-            '@apply bg-pink-500 text-white font-bold py-2 px-4 rounded-full shadow-lg hover:bg-pink-600': {},
-          },
-        })
-      })],
-    };
-  </script>
   <link href="https://cdn.jsdelivr.net/npm/daisyui@3.7.4/dist/full.css" rel="stylesheet" type="text/css" />
   <style>
-    body, html {
+    html, body {
       margin: 0;
       padding: 0;
       height: 100%;
       overflow: hidden;
     }
+
     #trickyBtn {
-      transition: all 0.2s ease;
+      transition: all 0.2s ease-in-out;
+      background: linear-gradient(45deg, red, blue, green, red);
+      background-size: 400% 400%;
+      animation: rgbShift 4s linear infinite;
+      color: white;
+      border: none;
+      font-weight: bold;
+      box-shadow: 0 0 15px rgba(0,0,0,0.3);
+    }
+
+    @keyframes rgbShift {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    #title {
+      font-size: 2rem;
+      font-weight: bold;
+      text-align: center;
+      background: linear-gradient(90deg, red, orange, yellow, green, cyan, blue, violet);
+      background-size: 400% 100%;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: rainbowText 6s linear infinite;
+    }
+
+    @keyframes rainbowText {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
     }
   </style>
 </head>
-<body class="bg-gradient-to-br from-purple-100 to-blue-200 flex justify-center items-center relative">
+<body class="flex flex-col items-center justify-center bg-gray-900 text-white relative select-none">
 
-  <button id="trickyBtn" class="btn btn-primary absolute">
+  <h1 id="title" class="mb-10">Catch the RGB Button!</h1>
+
+  <button id="trickyBtn" class="btn absolute px-6 py-3 rounded-full text-lg">
     Click Me!
   </button>
 
   <script>
     const btn = document.getElementById("trickyBtn");
 
-    btn.addEventListener("mouseover", () => {
+    function moveButton() {
       const bodyRect = document.body.getBoundingClientRect();
       const btnWidth = btn.offsetWidth;
       const btnHeight = btn.offsetHeight;
@@ -51,11 +73,33 @@
 
       btn.style.left = `${randX}px`;
       btn.style.top = `${randY}px`;
+    }
+
+    function handleAttempt(e) {
+      e.stopPropagation();
+      const caught = Math.random() < 0.2; // 20% chance
+      if (caught) {
+        btn.innerText = "Caught! 🎉";
+        setTimeout(() => {
+          btn.innerText = "Click Me!";
+          moveButton();
+        }, 1000);
+      } else {
+        moveButton();
+      }
+    }
+
+    // Desktop
+    btn.addEventListener("mouseover", moveButton);
+    btn.addEventListener("click", handleAttempt);
+
+    // Touch devices
+    btn.addEventListener("touchstart", (e) => {
+      e.preventDefault(); // Prevents accidental tap
+      moveButton();
     });
 
-    btn.addEventListener("click", () => {
-      alert("You actually clicked it! 🔥🔥🔥");
-    });
+    btn.addEventListener("touchend", handleAttempt);
   </script>
 
 </body>
